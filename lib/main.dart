@@ -1,9 +1,9 @@
-import 'dart:developer' as dev;
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:webview_flutter/webview_flutter.dart';
 
 class Mensagem {
   final String data;
@@ -14,7 +14,6 @@ class Mensagem {
     return Mensagem(json["data"]!);
   }
 }
-
 const url = 'https://positive-vibes-api.herokuapp.com/quotes/random';
 
 Future<Mensagem> fetchMensagens() async {
@@ -54,6 +53,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late Future<Mensagem> futureMensagem;
+  Completer<WebViewController> _controller = Completer<WebViewController>();
+
 
   final _frases = [
     "As pessoas costumam dizer que a motivação não dura sempre. Bem, nem o efeito do banho, por isso recomenda-se diariamente.",
@@ -73,13 +74,17 @@ class _HomeState extends State<Home> {
   void _gerarFrase() {
     var numeroSorteado = Random().nextInt(_frases.length);
     _fraseGerada = _frases[numeroSorteado];
-
     setState(() {});
   }
 
   void getMessages() {
-    futureMensagem = fetchMensagens();
-    setState(() {});
+    try {
+      futureMensagem = fetchMensagens();
+    } catch (e) {
+      _gerarFrase();
+    } finally {
+      setState(() {});
+    }
   }
 
   @override
@@ -87,6 +92,7 @@ class _HomeState extends State<Home> {
     super.initState();
     futureMensagem = fetchMensagens();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -105,21 +111,13 @@ class _HomeState extends State<Home> {
                 future: futureMensagem,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    // return Text(
-                    //   snapshot.data!.data,
-                    //   textAlign: TextAlign.justify,
-                    //   style: const TextStyle(
-                    //       fontSize: 20,
-                    //       fontStyle: FontStyle.italic,
-                    //       color: Colors.white),
-                    // );
                     return Stack(
                       children: [
                         Image.asset("images/cat_quote.jpg",
                         width: double.infinity,
                         fit: BoxFit.cover),
                         Positioned(
-                         bottom: 80,
+                         bottom: 120,
                          right: 45,
                          left: 110,
                          child: Text(
@@ -130,24 +128,44 @@ class _HomeState extends State<Home> {
                                fontStyle: FontStyle.italic,
                                color: Colors.black),
                          ),
-                        )
+                        ),
+                        Positioned(child: Image.asset("images/cat_thinking.jpg",), height: 70, width: 70, top:0, left: 0,)
                       ],
                     );
                   } else {
-                    return Text(
-                      _fraseGerada,
-                      textAlign: TextAlign.justify,
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.black),
-                    );
-                  }
-                }),
+                      return Stack(
+                          children: [
+                          Image.asset("images/cat_quote.jpg",
+                          width: double.infinity,
+                          fit: BoxFit.cover),
+                          Positioned(
+                            bottom: 80,
+                            right: 45,
+                            left: 110,
+                            child: Text(
+                                _fraseGerada,
+                                textAlign: TextAlign.justify,
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontStyle: FontStyle.italic,
+                                    color: Colors.black),
+                            ),
+                          ),
+                            Positioned(child: Image.asset("images/cat_thinking.jpg",), height: 70, width: 70, top:0, left: 0,)
+                        ],
+                      );
+                    }
+                  }),
             ElevatedButton(
               onPressed: getMessages,
               child: const Text("Nova Frase"),
-              style: ElevatedButton.styleFrom(primary: Colors.red),
+              style: ElevatedButton.styleFrom(primary: Colors.white, onPrimary: Colors.black),
+            ),
+            Expanded(
+              child : WebView(
+                initialUrl: Uri.parse('https://www.youtube.com/embed/J4BVaXkwmM8').toString(),
+                javascriptMode: JavascriptMode.unrestricted,
+              ),
             )
           ],
         ),
