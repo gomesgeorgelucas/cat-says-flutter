@@ -100,18 +100,38 @@ class _HomeState extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Image.asset("images/cat_quote.jpg"),
+            //Image.asset("images/cat_quote.jpg"),
             FutureBuilder<Mensagem>(
                 future: futureMensagem,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return Text(
-                      snapshot.data!.data,
-                      textAlign: TextAlign.justify,
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white),
+                    // return Text(
+                    //   snapshot.data!.data,
+                    //   textAlign: TextAlign.justify,
+                    //   style: const TextStyle(
+                    //       fontSize: 20,
+                    //       fontStyle: FontStyle.italic,
+                    //       color: Colors.white),
+                    // );
+                    return Stack(
+                      children: [
+                        Image.asset("images/cat_quote.jpg",
+                        width: double.infinity,
+                        fit: BoxFit.cover),
+                        Positioned(
+                         bottom: 80,
+                         right: 45,
+                         left: 110,
+                         child: Text(
+                           snapshot.data!.data,
+                           textAlign: TextAlign.justify,
+                           style: const TextStyle(
+                               fontSize: 14,
+                               fontStyle: FontStyle.italic,
+                               color: Colors.black),
+                         ),
+                        )
+                      ],
                     );
                   } else {
                     return Text(
