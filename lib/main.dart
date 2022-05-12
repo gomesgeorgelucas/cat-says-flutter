@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Mensagem {
   final String data;
@@ -101,35 +102,36 @@ class _HomeState extends State<Home> {
         padding: const EdgeInsets.all(16.0),
         width: double.infinity,
         decoration:
-        const BoxDecoration(color: Colors.black),
+        const BoxDecoration(color: Color(0xFF383837), gradient: LinearGradient(begin: Alignment(0, -1), end: Alignment(0, 0), colors: [Colors.black, Color(0xFF383837)])),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            //Image.asset("images/cat_quote.jpg"),
             FutureBuilder<Mensagem>(
                 future: futureMensagem,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Stack(
                       children: [
-                        Image.asset("images/cat_quote.jpg",
+                        Image.asset("images/cat_quote.png",
                         width: double.infinity,
                         fit: BoxFit.cover),
                         Positioned(
-                         bottom: 120,
+                         bottom: 80,
                          right: 45,
                          left: 110,
                          child: Text(
                            snapshot.data!.data,
-                           textAlign: TextAlign.justify,
-                           style: const TextStyle(
-                               fontSize: 14,
-                               fontStyle: FontStyle.italic,
-                               color: Colors.black),
+                           textAlign: TextAlign.left,
+                           style: GoogleFonts.macondo(
+                             textStyle: const TextStyle (
+                                 fontSize: 14,
+                                 fontStyle: FontStyle.italic,
+                                 color: Colors.black),
+                           )
                          ),
                         ),
-                        Positioned(child: Image.asset("images/cat_thinking.jpg",), height: 70, width: 70, top:0, left: 0,)
+                        Positioned(child: Image.asset("images/cat_thinking.png",), height: 70, width: 70, bottom:0, left: 145,)
                       ],
                     );
                   } else {
@@ -144,14 +146,15 @@ class _HomeState extends State<Home> {
                             left: 110,
                             child: Text(
                                 _fraseGerada,
-                                textAlign: TextAlign.justify,
-                                style: const TextStyle(
-                                    fontSize: 20,
-                                    fontStyle: FontStyle.italic,
-                                    color: Colors.black),
+                                style: GoogleFonts.macondo(
+                                  textStyle: const TextStyle (
+                                      fontSize: 14,
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.black),
+                                )
                             ),
                           ),
-                            Positioned(child: Image.asset("images/cat_thinking.jpg",), height: 70, width: 70, top:0, left: 0,)
+                            Positioned(child: Image.asset("images/cat_thinking.png",), height: 70, width: 70, bottom:0, right: 0,)
                         ],
                       );
                     }
